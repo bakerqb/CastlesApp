@@ -19,37 +19,16 @@ room_rotation=0
 
 class Room:
 	def __init__(self, filename, canvas, position):
-		# Filename = Ss300p3c2tSr270
-		# <type of room> (S for sleeping)
-		# s<size>
-		# p<points>
-		# c<points for connection>
-		# t<type of room connection>
-		# (c and t won't exist if there are no room connections)
-		# r<rotation angle> 
-
-		
 		self.canvas = canvas
 		self.filename = filename
-		
-		'''
-		room_dict = self.parse_room(filename)
-		self.type = room_dict.get('type')
-		self.size = room_dict.get('size')
-		self.points = room_dict.get('points')
-		self.connections = {
-			"type": room_dict["connections"]
-		}
-		'''
 		self.rotation = 0
 		self.photoimg = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"rooms"/filename)
-		self.photoimg = self.photoimg.subsample(2)
+		self.photoimg = self.photoimg.subsample(3)
 		
 		# canvas.tag_bind(self.photoimg, '<ButtonPress-1>', move_image)
-		self.room_img = canvas.create_image(900*position/7, 900*5/7, anchor=CENTER, image=self.photoimg)
+		self.room_img = canvas.create_image(width_*position/8, height_*6/7, anchor=CENTER, image=self.photoimg)
 		
 		self.bind()
-		
 
 	def bind(self):
 		self.canvas.tag_bind(self.room_img, '<Double-1>', lambda x, e = self.room_img: self.rotate_img(x))
@@ -75,12 +54,14 @@ class Room:
 		self.room_img = self.canvas.create_image(e.x, e.y, anchor=CENTER, image=self.photoimg)
 		self.bind()
 		self.canvas.pack()
+		global points_
+		points_ = 4
 
 	def rotate_img(self, e):
 		self.rotation = (self.rotation + 90) % 360
 		self.filename = self.filename.split('.')[0][:-3] + str(self.rotation).zfill(3) + ".png"
 		self.photoimg = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"rooms"/self.filename)
-		self.photoimg = self.photoimg.subsample(2)
+		self.photoimg = self.photoimg.subsample(3)
 		self.room_img = self.canvas.create_image(e.x, e.y, anchor=CENTER, image=self.photoimg)
 		self.bind()
 		self.canvas.pack()
@@ -92,37 +73,57 @@ def refresh(canvas):
 		time.sleep(0.01)	
 
 
+def update_score(e, canvas, score):
+	global text_
+	canvas.delete(text_)
+	text_ = canvas.create_text(200, 60, fill="darkblue", font="Times 30 italic bold", text="Your score is:" + str(score + points_))
+
 def main():
-	width_ = 900
-	height_ = 900
+	global width_
+	global height_
+	global points_
+	width_ = 1400
+	height_ = 800
+	score_ = 0
+	points_ = 0
 
 	tk = Tk()
+	background = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"wood.png")
+	background = background.zoom(2, 2)
+	
+	# background = background.subsample(background.width(), background.height())
 	canvas = Canvas(tk, width=width_, height=height_)
+	bg_img = canvas.create_image(0, 0, image=background, anchor="nw")
+	
 
-	foyer = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"rooms"/"yellowFoyer.png")
-	foyer = foyer.subsample(2)
-	canvas.create_image(width_/2, height_/2, anchor=CENTER, image=foyer)
+	foyer = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"rooms"/"yellow_foyer.png")
+	foyer = foyer.subsample(3)
+	canvas.create_image(width_/2, height_/2.5, anchor=CENTER, image=foyer)
 
-	global Sleeping_Room_Test
-	global Outdoor_Room_Test
+	# global Sleeping_Room_Test
+	# global Outdoor_Room_Test
 	Sleeping_Room_Test = Room("queens_bedroom_r000.png", canvas, 1)
 	Outdoor_Room_Test = Room("hundings_hut_r000.png", canvas, 2)
+	Utility_Room_Test = Room("broom_closet_r000.png", canvas, 3)
+	Downstairs_Room_Test = Room("bottomless_pit_r000.png", canvas, 4)
+	Living_Room_Test = Room("drawing_room_r000.png", canvas, 5)
+	Theater_Room = Room("theater_r000.png", canvas, 6)
+	Nap_Room = Room("nap_room_r000.png", canvas, 7)
 
+
+	global text_
+	text_ = canvas.create_text(200, 60, fill="darkblue", font="Times 30 italic bold", text="Your score is: 0")
 
 
 	button_widget = Button(tk, text="Finalize Move")
+	button_widget.bind("<Button-1>", lambda e: update_score(e, canvas, score_))
 	button_widget.pack()
+	
 
 	canvas.pack()
-	# canvas.bind('<B1-Motion>', lambda event: move_image(event, canvas, Sleeping_Room_Test))
-	# canvas.bind('<B1-Motion>', lambda event: move_image(event, canvas, Outdoor_Room_Test))
-	# canvas.bind('<Double-1>', lambda event: rotate_img(event, canvas, Sleeping_Room_Test))
-
-	# refresh_thread = threading.Thread(target=refresh, args=(canvas))
-	# refresh_thread.start()
+	canvas.bind()
 
 	canvas.mainloop()
-	# refresh_thread.join()
 
 
 if __name__ == '__main__':
