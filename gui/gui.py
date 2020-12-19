@@ -73,15 +73,18 @@ def refresh(canvas):
 		time.sleep(0.01)	
 
 
-def update_score(e, canvas, score):
+def update_score(e, canvas, button_widget):
 	global text_
+	global score_
 	canvas.delete(text_)
-	text_ = canvas.create_text(200, 60, fill="darkblue", font="Times 30 italic bold", text="Your score is:" + str(score + points_))
+	text_ = canvas.create_text(200, 60, fill="darkblue", font="Times 30 italic bold", text="Your score is:" + str(score_ + points_))
+	button_widget.bind("<Button-1>", lambda e: update_score(e, canvas, button_widget))
 
 def main():
 	global width_
 	global height_
 	global points_
+	global score_
 	width_ = 1400
 	height_ = 800
 	score_ = 0
@@ -116,7 +119,7 @@ def main():
 
 
 	button_widget = Button(tk, text="Finalize Move")
-	button_widget.bind("<Button-1>", lambda e: update_score(e, canvas, score_))
+	button_widget.bind("<Button-1>", lambda e: update_score(e, canvas, button_widget))
 	button_widget.pack()
 	
 
