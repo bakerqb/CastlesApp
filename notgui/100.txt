@@ -1,9 +1,10 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-Cloak utility 1 1 0 0 
-Powder utility 1 1 0 0 
-Lilac purple 5 4 0 0 
-Focus purple 5 4 0 0 
-PinkCabinet purple 5 4 0 0 
-Pantry yellow 2 2 0 0 
-Larder yellow 2 2 0 0 
-Buttery yellow 2 2 0 0 
+broom_closet utility 1 1 0 0
+cloak utility 1 1 0 0 
+powder utility 1 1 0 0 
+lilac living 5 4 0 0 
+focus living 5 4 0 0 
+pink_cabinet living 5 4 0 0 
+pantry food 2 2 0 0 
+larder food 2 2 0 0 
+buttery food 2 2 0 0 

@@ -1,10 +1,10 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-oratory activity 4 3 -1 3 stairs purple blue 
-sewing activity 4 3 -1 3 utility purple blue 
-billiards activity 4 3 -1 3 yellow purple blue
-shed green 1 2 1 1 utility  
-porch green 1 2 1 1 blue 
-gatehouse green 1 2 1 1 green
-mold basement 2 2 2 1 yellow 
-crypt basement 2 2 1 1 purple
-knight basement 2 2 2 1 yellow  
+oratory activity 4 3 -1 3 stairs living sleeping 
+sewing_room activity 4 3 -1 3 utility living sleeping 
+billiards_room activity 4 3 -1 3 food living sleeping
+shed outdoor 1 2 1 1 utility  
+porch outdoor 1 2 1 1 sleeping 
+gatehouse outdoor 1 2 1 1 outdoor
+mold_room downstairs 2 2 2 1 food 
+crypt downstairs 2 2 1 1 living
+knight_room downstairs 2 2 2 1 food  

@@ -1,7 +1,7 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-vestibule purple 1 4 4 1 yellow 
-throne purple 1 4 4 1 blue 
-stables green 5 4 1 1 activity
-terrace_gardens green 5 4 1 1 green 
-audience activity 7 3 -2 6 yellow stairs utility corridor purple blue
-singers_chamber activity 7 3 -2 6 yellow stairs utility corridor purple blue
+vestibule living 1 4 4 1 food
+throne_room living 1 4 4 1 sleeping
+stables outdoor 5 4 1 1 activity
+terrace_gardens outdoor 5 4 1 1 outdoor
+audience_room activity 7 3 -2 6 food downstairs utility corridor living sleeping
+singers_chamber activity 7 3 -2 6 food downstairs utility corridor living sleeping

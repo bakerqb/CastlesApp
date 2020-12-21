@@ -19,7 +19,7 @@ private:
         int entrances; 
         int attachVal; 
         string name; 
-        char type; 
+        char type;
         vector<char> colors; 
     }; 
     // includes all of the rooms being used 

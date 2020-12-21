@@ -1,7 +1,7 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-observatory purple 3 4 2 2 purple activity 
-east_tapestry_chamber purple 3 4 2 2 activity green
-pumpkin_garden green 2 3 1 1 green
-french_garden green 2 3 1 1 activity
-grand_bedchamber blue 4 2 2 1 corridor
-servant_quarters blue 4 2 2 1 corridor
+observatory living 3 4 2 2 living activity 
+east_tapestry_chamber living 3 4 2 2 activity outdoor
+pumpkin_garden outdoor 2 3 1 1 outdoor
+french_garden outdoor 2 3 1 1 activity
+grand_bedchamber sleeping 4 2 2 1 corridor
+servants_quarters sleeping 4 2 2 1 corridor

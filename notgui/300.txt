@@ -1,11 +1,11 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-laundry utility 3 1 0 0 
-panic utility 3 1 0 0 
+laundry_room utility 3 1 0 0 
+panic_room utility 3 1 0 0 
 sauna utility 3 1 0 0 
-guest_bedroom 3 2 2 1 yellow 
-queen_bedroom 3 2 2 1 blue 
-tasso 3 2 2 1 purple
-scullery 1 2 3 1 utility 
-dining 1 2 3 1 purple 
-kitchen 1 2 3 1 yellow
+guest_bedroom sleeping 3 2 2 1 food 
+queens_bedroom sleeping 3 2 2 1 sleeping 
+tasso_room sleeping 3 2 2 1 living
+scullery food 1 2 3 1 utility 
+dining_room food 1 2 3 1 living 
+kitchen food 1 2 3 1 food
   
