@@ -1,0 +1,7 @@
+NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
+secret_lair basement 1 2 2 1 utility
+venus_grotto basement 1 2 1 1 corridor 
+hundings_hut green 4 3 1 1 green
+green_house green 4 2 1 1 purple 
+theater activity 6 3 -2 4 utility corridor purple blue 
+theater activity 6 3 -2 4 yellow stairs purple blue 

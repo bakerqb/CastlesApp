@@ -1,0 +1,7 @@
+NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
+drawing purple 2 4 3 2 activity utility
+west_tapestry purple 2 4 3 2 activity green
+formal_gardens green 3 3 1 1 purple 
+coach_house green 3 2 1 1 yellow
+dungeon basement 1 2 2 1 stairs
+armory basement 1 2 2 1 activity 

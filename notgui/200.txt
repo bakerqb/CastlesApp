@@ -1,0 +1,10 @@
+NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
+dirt utility 2 1 0 0 
+utility utility 2 1 0 0 
+washroom 2 1 0 0 
+solar 2 2 2 1 green 
+dressing 2 2 2 1 yellow
+nap 2 2 2 1 purple 
+anteroom 1 2 3 1 blue 
+food_prep 1 2 3 1 activity
+meat_locker 1 2 3 1 green  

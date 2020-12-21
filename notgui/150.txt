@@ -1,0 +1,10 @@
+NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
+piano activity 3 3 -1 2 purple blue 
+flute activity 3 3 -1 2 purple blue 
+berchta activity 3 3 -1 2 purple blue 
+study purple 4 4 1 1 purple 
+sitting purple 4 4 1 1 green
+parlor purple 4 4 1 1 activity   
+fungus basement 3 2 1 1 yellow 
+bottomless_pit basement 3 1 1 1 green
+hole basement 3 1 1 1 blue 
