@@ -1,7 +1,7 @@
-NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-observatory living 3 4 2 2 living activity 
-east_tapestry_chamber living 3 4 2 2 activity outdoor
-pumpkin_garden outdoor 2 3 1 1 outdoor
-french_garden outdoor 2 3 1 1 activity
-grand_bedchamber sleeping 4 2 2 1 corridor
-servants_quarters sleeping 4 2 2 1 corridor
+NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS_LEFTEDGE_TOPEDGE_RIGHTEDGE_BOTTOMEDGE
+observatory living 3 4 2 2 living,activity 1_below 1_left 1_above 1_right
+east_tapestry_chamber living 3 4 2 2 activity,outdoor 1_above 1_right 1_above far_right
+pumpkin_garden outdoor 2 3 1 1 outdoor 1_above NA far_top far_right
+french_gazebo outdoor 2 3 1 1 activity 1_below NA far_bottom 1_left
+grand_bedchamber sleeping 4 2 2 1 corridor far_top NA NA far_right
+servants_quarters sleeping 4 2 2 1 corridor 1_below NA NA 1_left
