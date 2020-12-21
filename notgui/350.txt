@@ -1,8 +1,8 @@
-NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-gallery_of_mirrors living 3 4 2 1 corridor 
-salon living 3 4 2 1 activity
-9_pin_alley activity 5 3 -1 4 food utility living sleeping 
-train_room activity 5 3 -1 4 corridor stairs living sleeping 
-great_hall corridor 1 10 1 1 utility 
-upper_hall corridor 1 10 1 1 food
+NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS_LEFTEDGE_TOPEDGE_RIGHTEDGE_BOTTOMEDGE
+gallery_of_mirrors living 3 4 2 1 corridor far_bottom far_right far_bottom far_left
+salon living 3 4 2 1 activity far_bottom 2_right far_bottom 1_right
+9_pin_alley activity 5 3 -1 4 food,utility,living,sleeping far_top far_left NA far_left
+train_room activity 5 3 -1 4 corridor,downstairs,living,sleeping NA 2_right far_bottom 2_right
+great_hall corridor 1 10 1 1 utility far_top,far_bottom 2_left,center,2_right far_top,far_bottom far_left,1_left,1_right,far_right
+upper_hall corridor 1 10 1 1 food far_top,far_bottom 2_left,center,2_right far_top,far_bottom far_left,1_left,1_right,far_right
 
