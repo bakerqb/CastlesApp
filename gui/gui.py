@@ -23,6 +23,7 @@ class Room:
 		# Bind image to double-click and drag/drop events
 		self.bind()
 		self.move_flag = False
+		self.lock = False
 
 
 	def bind(self):
@@ -34,24 +35,28 @@ class Room:
 		self.move_flag = False
 
 	def move_img(self, e):
-		if self.move_flag:
-			self.board.canvas.move(self.room_img, e.x-self.x_pos, e.y-self.y_pos)
-		else:
-			self.move_flag = True
-			self.board.canvas.tag_raise(self.room_img)
+		if not self.lock:
+			if self.move_flag:
+				self.board.canvas.move(self.room_img, e.x-self.x_pos, e.y-self.y_pos)
+			else:
+				self.move_flag = True
+				self.board.canvas.tag_raise(self.room_img)
 		
-		self.x_pos = e.x
-		self.y_pos = e.y
+			self.x_pos = e.x
+			self.y_pos = e.y
+			self.board.last_selected_room = self
 
 	def rotate_img(self, e):
-		rotation = (int(self.filename.split('.')[0][-3:]) + 90) % 360
-		self.filename = self.filename.split('.')[0][:-3] + str(rotation).zfill(3) + ".png"
-		self.photoimg = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"rooms"/self.filename)
-		self.photoimg = self.photoimg.subsample(3)
-		self.room_img = self.board.canvas.create_image(e.x, e.y, anchor=CENTER, image=self.photoimg)
+		if not self.lock:
+			rotation = (int(self.filename.split('.')[0][-3:]) + 90) % 360
+			self.filename = self.filename.split('.')[0][:-3] + str(rotation).zfill(3) + ".png"
+			self.photoimg = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"rooms"/self.filename)
+			self.photoimg = self.photoimg.subsample(3)
+			self.room_img = self.board.canvas.create_image(e.x, e.y, anchor=CENTER, image=self.photoimg)
 		
-		# Rebind so object can be rotated again
-		self.bind()
+			# Rebind so object can be rotated again
+			self.bind()
+			self.board.last_selected_room = self
 
 
 class Board:
@@ -76,22 +81,21 @@ class Board:
 
 		self.score = 0
 		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Your score is: " + str(self.score))
+
+		self.last_selected_room = None
 	
 	def update_score(self, e):
-		del self.score_text
+		self.canvas.delete(self.score_text)
 		self.score += 1
-		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Your score is: " + str(self.score))
+		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Last selected room is: " + str(self.last_selected_room.filename))
 		self.button_widget.bind("<Button-1>", lambda e: self.update_score(e))
-
-
-
+		self.last_selected_room.lock = True
 
 class Game:
 	def __init__(self, tk):
 		self.board = Board(tk)
 		# self.rooms = self.read_in_rooms(room_file)
 		Room("yellow_foyer.png", 0, self.board)
-		self.score_text = self.board.canvas.create_text(200, 60, fill="darkblue", font="Times 30 italic bold", text="Your score is: 0")
 		self.draw_rooms()
 
 	def read_in_rooms(self, room_file):
