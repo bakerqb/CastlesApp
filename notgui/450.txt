@@ -1,7 +1,7 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-drawing living 2 4 3 2 activity utility
-west_tapestry_room living 2 4 3 2 activity outdoor
-formal_gardens outdoor 3 3 1 1 living 
-coach_house outdoor 3 2 1 1 food
-dungeon downstairs 1 2 2 1 downstairs
-armory downstairs 1 2 2 1 activity 
+drawing_room living 2 4 3 2 activity,utility center 1_left far_top far_right
+west_tapestry_room living 2 4 3 2 activity,outdoor center far_right center far_left
+formal_gardens outdoor 3 3 1 1 living NA NA far_top,far_bottom 2_right
+coach_house outdoor 3 2 1 1 food NA NA far_top 2_right
+dungeon downstairs 1 2 2 1 downstairs NA NA far_bottom 1_left
+armory downstairs 1 2 2 1 activity NA NA center 2_right

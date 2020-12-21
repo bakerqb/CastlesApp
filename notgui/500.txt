@@ -1,7 +1,7 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-secret_lair downstairs 1 2 2 1 utility
-venus_grotto downstairs 1 2 1 1 corridor 
-hundings_hut outdoor 4 3 1 1 outdoor
-green_house outdoor 4 2 1 1 living 
-theater activity 6 3 -2 4 utility corridor living sleeping 
-theater activity 6 3 -2 4 food stairs living sleeping 
+secret_lair downstairs 1 2 2 1 utility center NA NA center
+venus_grotto downstairs 1 2 1 1 corridor center NA center NA
+hundings_hut outdoor 4 3 1 1 outdoor center NA center center
+green_house outdoor 4 2 1 1 living center NA center NA
+theater activity 6 3 -2 4 utility,corridor,living,sleeping center center center NA
+forum activity 6 3 -2 4 food,downstairs,living,sleeping NA center center center

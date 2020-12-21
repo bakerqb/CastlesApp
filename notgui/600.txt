@@ -1,7 +1,7 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-vestibule living 1 4 4 1 food
-throne_room living 1 4 4 1 sleeping
-stables outdoor 5 4 1 1 activity
-terrace_gardens outdoor 5 4 1 1 outdoor
-audience_room activity 7 3 -2 6 food downstairs utility corridor living sleeping
-singers_chamber activity 7 3 -2 6 food downstairs utility corridor living sleeping
+vestibule living 1 4 4 1 food 1_bottom center 1_bottom center
+throne_room living 1 4 4 1 sleeping 1_top 2_right 1_bottom 2_right
+stables outdoor 5 4 1 1 activity 1_bottom,1_top NA NA 1_bottom,1_top
+terrace_gardens outdoor 5 4 1 1 outdoor 1_top NA 1_top 2_left,2_right
+audience_room activity 7 3 -2 6 food,downstairs,utility,corridor,living,sleeping NA 1_left 1_top,1_bottom NA
+singers_chamber activity 7 3 -2 6 food,downstairs,utility,corridor,living,sleeping NA NA NA 1_left,center_1_right
