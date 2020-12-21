@@ -3,11 +3,13 @@ from pathlib import Path
 import time
 
 class Room:
-	def __init__(self, filename, position, board, rooms):
+	def __init__(self, filename, position, board, rooms, size):
 		# Create attributes of Room class
 		self.filename = filename
 		self.board = board
 		self.photoimg = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"rooms"/filename).subsample(3)
+		self.size = size
+		self.rooms = rooms
 
 		# Set current position of image
 		if position == 0:
@@ -19,8 +21,8 @@ class Room:
 
 		# Display image
 		self.room_img = board.canvas.create_image(self.x_pos, self.y_pos, anchor=CENTER, image=self.photoimg)
-		print(self.room_img)
-		rooms[self.room_img] = self
+		self.rooms[self.room_img] = self
+		print(self.filename + ": " + str(self.room_img))
 
 		# Bind image to double-click and drag/drop events
 		self.bind()
@@ -50,12 +52,14 @@ class Room:
 
 	def rotate_img(self, e):
 		if not self.lock:
+			del self.rooms[self.room_img]
 			rotation = (int(self.filename.split('.')[0][-3:]) + 90) % 360
 			self.filename = self.filename.split('.')[0][:-3] + str(rotation).zfill(3) + ".png"
 			self.photoimg = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"rooms"/self.filename)
 			self.photoimg = self.photoimg.subsample(3)
 			self.room_img = self.board.canvas.create_image(e.x, e.y, anchor=CENTER, image=self.photoimg)
-		
+			self.rooms[self.room_img] = self
+			print(self.filename + ": " + str(self.room_img))
 			# Rebind so object can be rotated again
 			self.bind()
 			self.board.last_selected_room = self
@@ -80,11 +84,12 @@ class Board:
 		# Finalize move button
 		self.button_widget = Button(tk, text="Finalize Move")
 		self.button_widget.bind("<Button-1>", lambda e: self.update_score(e))
+		print("button: " + str(self.button_widget))
 		self.button_widget.pack()
 
 		self.score = 0
 		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Your score is: " + str(self.score))
-
+		print("score text: " + str(self.score_text))
 		self.last_selected_room = None
 	
 	def update_score(self, e):
@@ -93,15 +98,16 @@ class Board:
 		# canvas.delete(canvas)
 		x = self.last_selected_room.x_pos
 		y = self.last_selected_room.y_pos
-		x1 = x - 75
-		x2 = x + 75
-		y1 = y - 75
-		y2 = y + 75
-		
-		closest_room = self.canvas.find_overlapping(x1, y1, x2, y2)[1]
+		x1 = x - self.last_selected_room.photoimg.width()/2 - 10
+		x2 = x + self.last_selected_room.photoimg.width()/2 + 10
+		y1 = y - self.last_selected_room.photoimg.height()/2 - 10
+		y2 = y + self.last_selected_room.photoimg.height()/2 + 10
+		# self.canvas.delete(self.last_selected_room.room_img)
+		closest_room = self.canvas.find_overlapping(x1, y1, x2, y2)
 		print(closest_room)
-		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Last selected room is: " + str(self.game.rooms[closest_room].filename))
-		
+		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Last selected room is: " + str(self.game.rooms[closest_room[1]].filename))
+		print("score text: " + str(self.score_text))
+
 		self.button_widget.bind("<Button-1>", lambda e: self.update_score(e))
 		self.last_selected_room.lock = True
 
@@ -110,7 +116,7 @@ class Game:
 		self.board = Board(tk, self)
 		# self.rooms = self.read_in_rooms(room_file)
 		self.rooms = {}
-		Room("yellow_foyer.png", 0, self.board, self.rooms)
+		Room("yellow_foyer.png", 0, self.board, self.rooms, 125)
 		self.draw_rooms()
 
 	def read_in_rooms(self, room_file):
@@ -121,13 +127,13 @@ class Game:
 	def draw_rooms(self):
 		# Pick random rooms one at a time
 		# until 7 rooms are displayed
-		Room("sauna_r000.png", 1, self.board, self.rooms)
-		Room("hundings_hut_r000.png", 2, self.board, self.rooms)
-		Room("broom_closet_r000.png", 3, self.board, self.rooms)
-		Room("the_hole_r000.png", 4, self.board, self.rooms)
-		Room("drawing_room_r000.png", 5, self.board, self.rooms)
-		Room("theater_r000.png", 6, self.board, self.rooms)
-		Room("nap_room_r000.png", 7, self.board, self.rooms)
+		Room("sauna_r000.png", 1, self.board, self.rooms, 300)
+		Room("hundings_hut_r000.png", 2, self.board, self.rooms, 500)
+		Room("broom_closet_r000.png", 3, self.board, self.rooms, 100)
+		Room("the_hole_r000.png", 4, self.board, self.rooms, 150)
+		Room("drawing_room_r000.png", 5, self.board, self.rooms, 450)
+		Room("theater_r000.png", 6, self.board, self.rooms, 500)
+		Room("nap_room_r000.png", 7, self.board, self.rooms, 200)
 
 
 def main():
