@@ -3,7 +3,7 @@ from pathlib import Path
 import time
 
 class Room:
-	def __init__(self, filename, position, board):
+	def __init__(self, filename, position, board, rooms):
 		# Create attributes of Room class
 		self.filename = filename
 		self.board = board
@@ -19,6 +19,8 @@ class Room:
 
 		# Display image
 		self.room_img = board.canvas.create_image(self.x_pos, self.y_pos, anchor=CENTER, image=self.photoimg)
+		print(self.room_img)
+		rooms[self.room_img] = self
 
 		# Bind image to double-click and drag/drop events
 		self.bind()
@@ -60,9 +62,10 @@ class Room:
 
 
 class Board:
-	def __init__(self, tk):
+	def __init__(self, tk, game):
 		# Create canvas (board)
 		self.tk = tk
+		self.game = game
 		self.width_ = 1400
 		self.height_ = 800
 		self.canvas = Canvas(self.tk, width=self.width_, height=self.height_)
@@ -87,15 +90,27 @@ class Board:
 	def update_score(self, e):
 		self.canvas.delete(self.score_text)
 		self.score += 1
-		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Last selected room is: " + str(self.last_selected_room.filename))
+		# canvas.delete(canvas)
+		x = self.last_selected_room.x_pos
+		y = self.last_selected_room.y_pos
+		x1 = x - 75
+		x2 = x + 75
+		y1 = y - 75
+		y2 = y + 75
+		
+		closest_room = self.canvas.find_overlapping(x1, y1, x2, y2)[1]
+		print(closest_room)
+		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Last selected room is: " + str(self.game.rooms[closest_room].filename))
+		
 		self.button_widget.bind("<Button-1>", lambda e: self.update_score(e))
 		self.last_selected_room.lock = True
 
 class Game:
 	def __init__(self, tk):
-		self.board = Board(tk)
+		self.board = Board(tk, self)
 		# self.rooms = self.read_in_rooms(room_file)
-		Room("yellow_foyer.png", 0, self.board)
+		self.rooms = {}
+		Room("yellow_foyer.png", 0, self.board, self.rooms)
 		self.draw_rooms()
 
 	def read_in_rooms(self, room_file):
@@ -106,13 +121,13 @@ class Game:
 	def draw_rooms(self):
 		# Pick random rooms one at a time
 		# until 7 rooms are displayed
-		Room("sauna_r000.png", 1, self.board)
-		Room("hundings_hut_r000.png", 2, self.board)
-		Room("broom_closet_r000.png", 3, self.board)
-		Room("the_hole_r000.png", 4, self.board)
-		Room("drawing_room_r000.png", 5, self.board)
-		Room("theater_r000.png", 6, self.board)
-		Room("nap_room_r000.png", 7, self.board)
+		Room("sauna_r000.png", 1, self.board, self.rooms)
+		Room("hundings_hut_r000.png", 2, self.board, self.rooms)
+		Room("broom_closet_r000.png", 3, self.board, self.rooms)
+		Room("the_hole_r000.png", 4, self.board, self.rooms)
+		Room("drawing_room_r000.png", 5, self.board, self.rooms)
+		Room("theater_r000.png", 6, self.board, self.rooms)
+		Room("nap_room_r000.png", 7, self.board, self.rooms)
 
 
 def main():
