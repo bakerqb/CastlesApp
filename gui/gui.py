@@ -9,10 +9,14 @@ class Room:
 		self.filename = filename
 		self.board = board
 		self.photoimg = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"rooms"/filename).subsample(3)
-		self.size = all_rooms.get("size")
+		self.room_info = all_rooms[filename[:-9]]
+		self.size = self.room_info["size"]
 		self.rooms = rooms
-		self.points = all_rooms[filename[:-9]]["points"]
-		
+		self.points = self.room_info["points"]
+		self.dimensions = self.get_dimensions()
+		# print("dimensions: " + str(self.dimensions))
+		self.entrances = self.get_entrance_locations()
+
 
 		# Set current position of image
 		if position == 0:
@@ -32,6 +36,25 @@ class Room:
 		self.move_flag = False
 		self.lock = False
 
+	def get_dimensions(self):
+		if self.size == 100:
+			return (1, 1)
+		elif self.size in [125, 150]:
+			return (1.5, 1.5)
+		elif self.size == 200:
+			return (2, 1)
+		elif self.size == 250:
+			return (2.5, 1)
+		elif self.size in [300, 400]:
+			return (2, 2)
+		elif self.size == 350:
+			return (3.5, 1)
+		elif self.size == 450:
+			return (3, 1.5)
+		elif self.size == 500:
+			return (2.5, 2.5)
+		elif self.size == 600:
+			return (3.5, 2)
 
 	def bind(self):
 		self.board.canvas.tag_bind(self.room_img, '<Double-1>', lambda x, e = self.room_img: self.rotate_img(x))
@@ -66,6 +89,123 @@ class Room:
 			# Rebind so object can be rotated again
 			self.bind()
 			self.board.last_selected_room = self
+
+	def get_entrance_locations(self):
+		# Entrances formatted as (<run from center>, <rise from center>)
+		
+		plot_entrances = {
+			"lateral": [],
+			"vertical": []
+		}
+
+		# left edge
+		plot_entrances["lateral"].extend(self.get_lateral_entrances("left"))
+
+		# top edge
+		plot_entrances["vertical"].extend(self.get_lateral_entrances("top"))
+
+		# right edge
+		plot_entrances["lateral"].extend(self.get_lateral_entrances("right"))
+
+		# bottom edge
+		plot_entrances["vertical"].extend(self.get_lateral_entrances("bottom"))
+		return plot_entrances
+
+	def get_lateral_entrances(self, side):
+		entrance_arr = []
+		for entrance in self.room_info["entrances"][side + "_edge"]:
+			if entrance == "NA":
+				continue
+
+			# x coordinate
+			x = 0
+			if side == "left":
+				x = -self.photoimg.width()/2
+			else:
+				x = self.photoimg.width()/2
+			
+			# Find length of ridge of room
+			increment = float(self.photoimg.height()/self.dimensions[1]/8)
+			deviation = 0
+			if (self.dimensions[1]*2) % 2 == 1:
+				deviation = increment*4
+			else:
+				deviation = increment*2
+
+			# y coorindate
+			y = 0
+			if entrance == "far_top":
+				y = self.photoimg.height()/2 - increment*2
+				if self.size == 300 and side == "right":
+					x = 0
+			elif entrance == "far_bottom":
+				y = -self.photoimg.height()/2 + increment*2
+			elif entrance == "1_top":
+				y = deviation
+				if self.size == 300 and side == "right":
+					x = 0
+			elif entrance == "2_top":
+				y = deviation + increment*4
+				if self.size == 300 and side == "right":
+					x = 0
+			elif entrance == "1_bottom":
+				y = -deviation
+			elif entrance == "2_bottom":
+				y = -deviation - increment*4
+			elif entrance == "center":
+				y = 0
+			elif entrance == "NA":
+				print("miscalculation with entrance")
+				exit(1)
+
+			# add to arr
+			entrance_arr.append((x, y))
+		return entrance_arr
+
+	def get_vertical_entrances(self, top_or_bottom):
+		entrance_arr = []
+		for entrance in self.room_info["entrances"][top_or_bottom + "_edge"]:
+			if entrance == "NA":
+				continue
+
+			# y coordinate
+			y = 0
+			if top_or_bottom == "top":
+				y = self.photoimg.height()/2
+			else:
+				y = -self.photoimg.height()/2
+			
+			# Find length of ridge of room
+			increment = float(self.photoimg.height()/self.dimensions[1]/8)
+			deviation = 0
+			if (self.dimensions[0]*2) % 2 == 1:
+				deviation = increment*4
+			else:
+				deviation = increment*2
+
+			# x coorindate
+			x = 0
+			if entrance == "far_right":
+				x = self.photoimg.width()/2 - increment*2
+			elif entrance == "far_left":
+				x = -self.photoimg.width()/2 + increment*2
+			elif entrance == "1_right":
+				x = deviation
+			elif entrance == "2_right":
+				x = deviation + increment*4
+			elif entrance == "1_left":
+				x = -deviation
+			elif entrance == "2_left":
+				x = -deviation - increment*4
+			elif entrance == "center":
+				x = 0
+			else:
+				print("miscalculation with entrance")
+				exit(1)
+
+			# add to arr
+			entrance_arr.append((x, y))
+		return entrance_arr
 
 
 class Board:
@@ -131,9 +271,10 @@ class Game:
 					
 					for line in txt.readlines()[1:]:
 						attributes = line.split(' ')
-						print(attributes)
 						if len(attributes) == 0:
 							continue
+						attributes[-1] = attributes[-1].strip('\n')
+						
 						self.all_rooms[attributes[0]] = {
 							"filename": attributes[0] + "_r000.png",
 							"type": attributes[1],
@@ -151,6 +292,7 @@ class Game:
 							},
 							"size": int(filename[:-4])
 						}
+
 	
 		# Read in foyers
 		temp_arr = ["yellow", "blue", "red", "green"]
