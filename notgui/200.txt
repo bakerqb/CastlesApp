@@ -1,10 +1,10 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-dirt_room utility 2 1 0 0 
-utility_room utility 2 1 0 0 
-washroom utility 2 1 0 0 
-solar sleeping 2 2 2 1 outdoor 
-dressing_room sleeping 2 2 2 1 food
-nap_room sleeping 2 2 2 1 living 
-anteroom food 1 2 3 1 sleeping 
-food_prep_room food 1 2 3 1 activity
-meat_locker food 1 2 3 1 outdoor  
+dirt_room utility 2 1 0 0 NA NA far_top NA
+utility_room utility 2 1 0 0 NA NA far_bottom NA
+washroom utility 2 1 0 0 NA NA NA 1_right
+solar sleeping 2 2 2 1 outdoor NA NA far_bottom far_right
+dressing_room sleeping 2 2 2 1 food far_bottom NA far_top NA
+nap_room sleeping 2 2 2 1 living NA NA far_bottom 1_left
+anteroom food 1 2 3 1 sleeping NA 1_left NA 1_right
+food_prep_room food 1 2 3 1 activity NA far_right NA far_right
+meat_locker food 1 2 3 1 outdoor far_top NA far_top NA

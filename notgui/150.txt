@@ -1,10 +1,10 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-piano_room activity 3 3 -1 2 living sleeping 
-flute_room activity 3 3 -1 2 living sleeping 
-berchta_room activity 3 3 -1 2 living sleeping 
-study living 4 4 1 1 living 
-sitting_room living 4 4 1 1 outdoor
-parlor living 4 4 1 1 activity   
-fungus_room basement 3 2 1 1 food 
-bottomless_pit basement 3 1 1 1 outdoor
-the_hole basement 3 1 1 1 sleeping 
+piano_room activity 3 3 -1 2 living,sleeping NA center center center
+flute_room activity 3 3 -1 2 living,sleeping center center center NA
+berchta_room activity 3 3 -1 2 living,sleeping center NA center center
+study living 4 4 1 1 living center center center center
+sitting_room living 4 4 1 1 outdoor center center center center
+parlor living 4 4 1 1 activity center center center center
+fungus_room basement 3 2 1 1 food center center NA NA
+bottomless_pit basement 3 1 1 1 outdoor NA center NA NA
+the_hole basement 3 1 1 1 sleeping NA NA Na center

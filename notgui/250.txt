@@ -1,10 +1,10 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-oratory activity 4 3 -1 3 stairs living sleeping 
-sewing_room activity 4 3 -1 3 utility living sleeping 
-billiards_room activity 4 3 -1 3 food living sleeping
-shed outdoor 1 2 1 1 utility  
-porch outdoor 1 2 1 1 sleeping 
-gatehouse outdoor 1 2 1 1 outdoor
-mold_room downstairs 2 2 2 1 food 
-crypt downstairs 2 2 1 1 living
-knight_room downstairs 2 2 2 1 food  
+oratory activity 4 3 -1 3 downstairs,living,sleeping NA center far_top,far_bottom NA
+sewing_room activity 4 3 -1 3 utility,living,sleeping NA 1_right far_bottom 1_right
+billiards_room activity 4 3 -1 3 food,living,sleeping NA center far_top 1_left
+shed outdoor 1 2 1 1 utility NA NA far_bottom far_left
+porch outdoor 1 2 1 1 sleeping NA NA NA far_left,far_right
+gatehouse outdoor 1 2 1 1 outdoor NA NA NA far_left,far_right
+mold_room downstairs 2 2 2 1 food far_bottom NA NA center
+crypt downstairs 2 2 1 1 living far_left NA NA far_right
+knight_room downstairs 2 2 2 1 sleeping far_bottom NA NA far_right
