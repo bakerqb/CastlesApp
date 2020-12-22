@@ -16,7 +16,7 @@ class Room:
 		self.dimensions = self.get_dimensions()
 		# print("dimensions: " + str(self.dimensions))
 		self.entrances = self.get_entrance_locations()
-
+		self.all_rooms = all_rooms
 
 		# Set current position of image
 		if position == 0:
@@ -29,6 +29,7 @@ class Room:
 		# Display image
 		self.room_img = board.canvas.create_image(self.x_pos, self.y_pos, anchor=CENTER, image=self.photoimg)
 		self.rooms[self.room_img] = self
+		self.all_rooms[self.room_img] = self.room_info
 		print(self.filename + ": " + str(self.room_img))
 
 		# Bind image to double-click and drag/drop events
@@ -231,7 +232,7 @@ class Board:
 		self.button_widget.pack()
 
 		self.score = 0
-		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Your score is: " + str(self.score))
+		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Score: " + str(self.score))
 		print("score text: " + str(self.score_text))
 		self.last_selected_room = None
 
@@ -243,13 +244,27 @@ class Board:
 		# canvas.delete(canvas)
 		x = self.last_selected_room.x_pos
 		y = self.last_selected_room.y_pos
-		x1 = x - self.last_selected_room.photoimg.width()/2 - 10
-		x2 = x + self.last_selected_room.photoimg.width()/2 + 10
-		y1 = y - self.last_selected_room.photoimg.height()/2 - 10
-		y2 = y + self.last_selected_room.photoimg.height()/2 + 10
-		# self.canvas.delete(self.last_selected_room.room_img)
-		closest_room = self.canvas.find_overlapping(x1, y1, x2, y2)
-		# print(closest_room)
+		
+		
+		print(self.last_selected_room.entrances)
+		for entrance in self.last_selected_room.entrances["lateral"]:
+			x1 = x + entrance[0] + 12
+			x2 = x + entrance[0] - 12
+			y1 = y + entrance[1] + 12
+			y2 = y + entrance[1] - 12
+			closest_room = self.canvas.find_overlapping(x1, y1, x2, y2)
+			print(closest_room)
+			for room in closest_room:
+				if room > 1 and room != self.last_selected_room.room_img:
+					connection_info = self.last_selected_room.room_info.get("connections")
+					if connection_info:
+						print("here")
+						print("first: " + self.game.all_rooms[room]["type"])
+						print("second: " + str(connection_info["type"]))
+						for connection_type in connection_info["type"]:
+							if self.game.all_rooms[room]["type"] == connection_type:
+								self.score += int(connection_info["points"])
+			
 		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Score: " + str(self.score))
 		# print("score text: " + str(self.score_text))
 
@@ -355,7 +370,7 @@ class Game:
 	def draw_rooms(self):
 		# Pick random rooms one at a time
 		# until 7 rooms are displayed
-		Room("sauna_r000.png", 1, self.board, self.rooms, self.all_rooms)
+		Room("gallery_of_mirrors_r000.png", 1, self.board, self.rooms, self.all_rooms)
 		Room("hundings_hut_r000.png", 2, self.board, self.rooms, self.all_rooms)
 		Room("broom_closet_r000.png", 3, self.board, self.rooms, self.all_rooms)
 		Room("the_hole_r000.png", 4, self.board, self.rooms, self.all_rooms)
