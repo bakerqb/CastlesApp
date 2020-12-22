@@ -1,10 +1,10 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-broom_closet utility 1 1 0 0 NA NA NA far_left
-cloak_room utility 1 1 0 0 NA NA NA far_left
-powder_room utility 1 1 0 0 NA NA NA far_right
-lilac_cabinet living 5 4 0 0 far_top far_left far_bottom far_right
-focus_room living 5 4 0 0 far_top far_right far_bottom far_right
-pink_cabinet living 5 4 0 0 far_top far_right far_top far_right
-pantry food 2 2 0 0 far_bottom NA far_top NA
-larder food 2 2 0 0 far_bottom NA far_bottom NA
-buttery food 2 2 0 0 far_top NA far_bottom NA
+broom_closet utility 1 1 0 0 NA NA NA NA far_left
+cloak_room utility 1 1 0 0 NA NA NA NA far_left
+powder_room utility 1 1 0 0 NA NA NA NA far_right
+lilac_cabinet living 5 4 0 0 NA far_top far_left far_bottom far_right
+focus_room living 5 4 0 0 NA far_top far_right far_bottom far_right
+pink_cabinet living 5 4 0 0 NA far_top far_right far_top far_right
+pantry food 2 2 0 0 NA far_bottom NA far_top NA
+larder food 2 2 0 0 NA far_bottom NA far_bottom NA
+buttery food 2 2 0 0 NA far_top NA far_bottom NA

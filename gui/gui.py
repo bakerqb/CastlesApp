@@ -1,15 +1,18 @@
 from tkinter import *
 from pathlib import Path
 import time
+import os
 
 class Room:
-	def __init__(self, filename, position, board, rooms, size):
+	def __init__(self, filename, position, board, rooms, all_rooms):
 		# Create attributes of Room class
 		self.filename = filename
 		self.board = board
 		self.photoimg = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"rooms"/filename).subsample(3)
-		self.size = size
+		self.size = all_rooms.get("size")
 		self.rooms = rooms
+		self.points = all_rooms[filename[:-9]]["points"]
+		
 
 		# Set current position of image
 		if position == 0:
@@ -91,10 +94,12 @@ class Board:
 		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Your score is: " + str(self.score))
 		print("score text: " + str(self.score_text))
 		self.last_selected_room = None
+
+
 	
 	def update_score(self, e):
 		self.canvas.delete(self.score_text)
-		self.score += 1
+		self.score += int(self.last_selected_room.points)
 		# canvas.delete(canvas)
 		x = self.last_selected_room.x_pos
 		y = self.last_selected_room.y_pos
@@ -104,9 +109,9 @@ class Board:
 		y2 = y + self.last_selected_room.photoimg.height()/2 + 10
 		# self.canvas.delete(self.last_selected_room.room_img)
 		closest_room = self.canvas.find_overlapping(x1, y1, x2, y2)
-		print(closest_room)
-		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Last selected room is: " + str(self.game.rooms[closest_room[1]].filename))
-		print("score text: " + str(self.score_text))
+		# print(closest_room)
+		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Score: " + str(self.score))
+		# print("score text: " + str(self.score_text))
 
 		self.button_widget.bind("<Button-1>", lambda e: self.update_score(e))
 		self.last_selected_room.lock = True
@@ -116,7 +121,88 @@ class Game:
 		self.board = Board(tk, self)
 		# self.rooms = self.read_in_rooms(room_file)
 		self.rooms = {}
-		Room("yellow_foyer.png", 0, self.board, self.rooms, 125)
+		self.all_rooms = {}
+
+		# Read in rooms
+		path = Path(__file__).resolve().parent.parent/"notgui"
+		for filename in os.listdir(path):
+			if filename.endswith(".txt"):
+				with open(path/filename, 'r') as txt:
+					
+					for line in txt.readlines()[1:]:
+						attributes = line.split(' ')
+						print(attributes)
+						if len(attributes) == 0:
+							continue
+						self.all_rooms[attributes[0]] = {
+							"filename": attributes[0] + "_r000.png",
+							"type": attributes[1],
+							"points": attributes[2],
+							"num_entrances": attributes[3],
+							"connections": {
+								"points": attributes[4],
+								"type": attributes[6].split(',')
+							},
+							"entrances": {
+								"left_edge": attributes[7].split(','),
+								"top_edge": attributes[8].split(','),
+								"right_edge": attributes[9].split(','),
+								"bottom_edge": attributes[10].split(',')
+							},
+							"size": int(filename[:-4])
+						}
+	
+		# Read in foyers
+		temp_arr = ["yellow", "blue", "red", "green"]
+		for val in temp_arr:
+			self.all_rooms[val + "_foyer"] = {
+				"filename": val + "_foyer_r000.png",
+				"type": "corridor",
+				"points": 0,
+				"num_entrances": 3,
+				"connections": None,
+				"entrances": {
+					"left_edge": ["center"],
+					"top_edge": ["center"],
+					"right_edge": ["center"],
+					"bottom_edge": ["NA"]
+				},
+				"size": 125
+			}
+		
+		# Read in hallway
+		self.all_rooms["hallway"] = {
+			"filename": "hallway_r000.png",
+			"type": "corridor",
+			"points": 0,
+			"num_entrances": 14,
+			"connections": None,
+			"entrances": {
+				"left_edge": ["center"],
+				"top_edge": ["far_left", "2_left", "1_left", "center", "1_right", "2_right", "far_right"],
+				"right_edge": ["center"],
+				"bottom_edge": ["far_left", "2_left", "1_left", "center", "1_right", "2_right", "far_right"],
+			},
+			"size": 150
+		}
+
+		# Read in stairway
+		self.all_rooms["stairs"] = {
+			"filename": "stairs_r000.png",
+			"type": "corridor",
+			"points": 0,
+			"num_entrances": 2,
+			"connections": None,
+			"entrances": {
+				"left_edge": ["center"],
+				"top_edge": ["NA"],
+				"right_edge": ["center"],
+				"bottom_edge": ["NA"],
+			},
+			"size": 75
+		}
+
+		Room("yellow_foyer_r000.png", 0, self.board, self.rooms, self.all_rooms)
 		self.draw_rooms()
 
 	def read_in_rooms(self, room_file):
@@ -127,13 +213,13 @@ class Game:
 	def draw_rooms(self):
 		# Pick random rooms one at a time
 		# until 7 rooms are displayed
-		Room("sauna_r000.png", 1, self.board, self.rooms, 300)
-		Room("hundings_hut_r000.png", 2, self.board, self.rooms, 500)
-		Room("broom_closet_r000.png", 3, self.board, self.rooms, 100)
-		Room("the_hole_r000.png", 4, self.board, self.rooms, 150)
-		Room("drawing_room_r000.png", 5, self.board, self.rooms, 450)
-		Room("theater_r000.png", 6, self.board, self.rooms, 500)
-		Room("nap_room_r000.png", 7, self.board, self.rooms, 200)
+		Room("sauna_r000.png", 1, self.board, self.rooms, self.all_rooms)
+		Room("hundings_hut_r000.png", 2, self.board, self.rooms, self.all_rooms)
+		Room("broom_closet_r000.png", 3, self.board, self.rooms, self.all_rooms)
+		Room("the_hole_r000.png", 4, self.board, self.rooms, self.all_rooms)
+		Room("drawing_room_r000.png", 5, self.board, self.rooms, self.all_rooms)
+		Room("theater_r000.png", 6, self.board, self.rooms, self.all_rooms)
+		Room("nap_room_r000.png", 7, self.board, self.rooms, self.all_rooms)
 
 
 def main():
@@ -146,12 +232,6 @@ def main():
 	g.board.canvas.bind()
 	# tk.attributes("-transparentcolor", "white")
 	g.board.canvas.mainloop()
-
-
-	
-	
-
-	
 
 
 if __name__ == '__main__':

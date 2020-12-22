@@ -5,4 +5,3 @@ salon living 3 4 2 1 activity far_bottom 2_right far_bottom 1_right
 train_room activity 5 3 -1 4 corridor,downstairs,living,sleeping NA 2_right far_bottom 2_right
 great_hall corridor 1 10 1 1 utility far_top,far_bottom 2_left,center,2_right far_top,far_bottom far_left,1_left,1_right,far_right
 upper_hall corridor 1 10 1 1 food far_top,far_bottom 2_left,center,2_right far_top,far_bottom far_left,1_left,1_right,far_right
-

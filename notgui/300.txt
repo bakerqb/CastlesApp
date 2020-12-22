@@ -1,11 +1,10 @@
 NAME_TYPE_POINTS_ENTRANCES_ATTACHVAL_NUMATTACH_COLORS
-laundry_room utility 3 1 0 0 NA NA 1_bottom NA
-panic_room utility 3 1 0 0 NA NA far_top NA
-sauna utility 3 1 0 0 NA NA far_bottom NA
+laundry_room utility 3 1 0 0 NA NA NA 1_bottom NA
+panic_room utility 3 1 0 0 NA NA NA far_top NA
+sauna utility 3 1 0 0 NA NA NA far_bottom NA
 guest_bedroom sleeping 3 2 2 1 food NA NA far_bottom 1_left
 queens_bedroom sleeping 3 2 2 1 sleeping NA far_left far_top NA
 tasso_room sleeping 3 2 2 1 living far_top NA NA far_right
 scullery food 1 2 3 1 utility far_bottom NA 1_bottom NA
 dining_room food 1 2 3 1 living 1_top NA 1_bottom NA
 kitchen food 1 2 3 1 food NA NA 1_top 1_left
-  
