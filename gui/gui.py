@@ -15,22 +15,32 @@ class Room:
 		self.points = self.room_info["points"]
 		self.dimensions = self.get_dimensions()
 		# print("dimensions: " + str(self.dimensions))
-		self.entrances = self.get_entrance_locations()
-		self.all_rooms = all_rooms
 
 		# Set current position of image
+		
 		if position == 0:
+			print("foyer coords")
 			self.x_pos = board.width_/2
 			self.y_pos = board.height_/2.5
+			print("(" + str(self.x_pos) + ", " + str(self.y_pos) + ")")
+
 		else:
 			self.x_pos = board.width_*position/8
 			self.y_pos = board.height_*6/7
+		self.false_x_pos = self.x_pos
+		self.false_y_pos = self.y_pos
 
 		# Display image
 		self.room_img = board.canvas.create_image(self.x_pos, self.y_pos, anchor=CENTER, image=self.photoimg)
 		self.rooms[self.room_img] = self
+		
+		self.entrances = self.get_entrance_locations()
+		self.all_rooms = all_rooms
+
 		self.all_rooms[self.room_img] = self.room_info
 		print(self.filename + ": " + str(self.room_img))
+
+		
 
 		# Bind image to double-click and drag/drop events
 		self.bind()
@@ -68,13 +78,15 @@ class Room:
 	def move_img(self, e):
 		if not self.lock:
 			if self.move_flag:
-				self.board.canvas.move(self.room_img, e.x-self.x_pos, e.y-self.y_pos)
+				self.board.canvas.move(self.room_img, e.x-self.false_x_pos, e.y-self.false_y_pos)
 			else:
 				self.move_flag = True
 				self.board.canvas.tag_raise(self.room_img)
 		
-			self.x_pos = e.x
-			self.y_pos = e.y
+			self.x_pos = self.photoimg.width()/2 + self.board.canvas.coords(self.room_img)[0]
+			self.y_pos = self.photoimg.height()/2 + self.board.canvas.coords(self.room_img)[1] - 60
+			self.false_x_pos = e.x
+			self.false_y_pos = e.y
 			self.board.last_selected_room = self
 
 	def rotate_img(self, e):
@@ -136,23 +148,25 @@ class Room:
 			# y coorindate
 			y = 0
 			if entrance == "far_top":
-				y = self.photoimg.height()/2 - increment*2
+				y = -self.photoimg.height()/2 + increment*2
 				if self.size == 300 and side == "right":
 					x = 0
 			elif entrance == "far_bottom":
-				y = -self.photoimg.height()/2 + increment*2
+				y = self.photoimg.height()/2 - increment*2
+				if self.room_img == 4:
+					print("gallery of mirrors y coord: " + str(y))
 			elif entrance == "1_top":
-				y = deviation
+				y = -deviation
 				if self.size == 300 and side == "right":
 					x = 0
 			elif entrance == "2_top":
-				y = deviation + increment*4
+				y = -deviation - increment*4
 				if self.size == 300 and side == "right":
 					x = 0
 			elif entrance == "1_bottom":
-				y = -deviation
+				y = deviation
 			elif entrance == "2_bottom":
-				y = -deviation - increment*4
+				y = deviation + increment*4
 			elif entrance == "center":
 				y = 0
 			elif entrance == "NA":
@@ -172,9 +186,9 @@ class Room:
 			# y coordinate
 			y = 0
 			if top_or_bottom == "top":
-				y = self.photoimg.height()/2
-			else:
 				y = -self.photoimg.height()/2
+			else:
+				y = self.photoimg.height()/2
 			
 			# Find length of ridge of room
 			increment = float(self.photoimg.height()/self.dimensions[1]/8)
@@ -218,6 +232,9 @@ class Board:
 		self.height_ = 800
 		self.canvas = Canvas(self.tk, width=self.width_, height=self.height_)
 
+		self.label = Label(self.tk, text="")
+		self.canvas.bind('<B1-Motion>', self.mouse)
+		self.label.pack(side=BOTTOM)
 		# Background image
 		background = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"wood.png")
 		background = background.zoom(4).subsample(3)
@@ -237,39 +254,74 @@ class Board:
 		self.last_selected_room = None
 
 
-	
+	def mouse(self, e):
+		self.label.config(text="(" + str(e.x) + ", " + str(e.y) + ")")
+
 	def update_score(self, e):
 		self.canvas.delete(self.score_text)
 		self.score += int(self.last_selected_room.points)
 		# canvas.delete(canvas)
 		x = self.last_selected_room.x_pos
 		y = self.last_selected_room.y_pos
-		
+		print("current coords: (" + str(x) + ", " + str(y) + ")")
 		
 		print(self.last_selected_room.entrances)
 		for entrance in self.last_selected_room.entrances["lateral"]:
-			x1 = x + entrance[0] + 12
-			x2 = x + entrance[0] - 12
-			y1 = y + entrance[1] + 12
-			y2 = y + entrance[1] - 12
+			# Create radius for entrance of room just placed
+			x1 = x + entrance[0] + 30
+			x2 = x + entrance[0] - 30
+			y1 = y + entrance[1] + 30
+			y2 = y + entrance[1] - 30
 			closest_room = self.canvas.find_overlapping(x1, y1, x2, y2)
 			print(closest_room)
+
+			# Look at all rooms touching that entrance
 			for room in closest_room:
 				if room > 1 and room != self.last_selected_room.room_img:
-					connection_info = self.last_selected_room.room_info.get("connections")
-					if connection_info:
-						print("here")
-						print("first: " + self.game.all_rooms[room]["type"])
-						print("second: " + str(connection_info["type"]))
-						for connection_type in connection_info["type"]:
-							if self.game.all_rooms[room]["type"] == connection_type:
-								self.score += int(connection_info["points"])
+					if self.last_selected_room.room_img == 9:
+						print("theater entrance: (" + str(entrance[0]) + ", " + str(entrance[1]) + ")")
+					if self.is_connected(x + entrance[0], y + entrance[1], room, "lateral"):
+						
+						# Check if last_selected_room has points for connections
+						connection_info = self.last_selected_room.room_info.get("connections")
+						if connection_info:
+							for connection_type in connection_info["type"]:
+								if self.game.all_rooms[room]["type"] == connection_type:
+									self.score += int(connection_info["points"])
+					
+						# Check if room touching last_selected_room has points for connections
+						connected_room_info = self.game.all_rooms[room].get("connections")
+						if connected_room_info:
+							print(connected_room_info)
+							for connection_type in connected_room_info["type"]:
+								if self.last_selected_room.room_info.get("type") == connection_type:
+									self.score += int(connected_room_info["points"])
 			
 		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Score: " + str(self.score))
+
 		# print("score text: " + str(self.score_text))
 
 		self.button_widget.bind("<Button-1>", lambda e: self.update_score(e))
 		self.last_selected_room.lock = True
+
+
+	def is_connected(self, x, y, room, direction):
+		entrances = self.game.rooms[room].entrances[direction]
+		room_x_pos = self.game.rooms[room].x_pos
+		room_y_pos = self.game.rooms[room].y_pos
+		for entrance in entrances:
+			print("entrance of room just placed")
+			print("(" + str(x) + ", " + str(y) + ")")
+			print("entrance of room you're connecting to")
+			print("(" + str(room_x_pos + entrance[0]) + ", " + str(room_y_pos + entrance[1]) + ")")
+			if abs(x - (room_x_pos + entrance[0])) <= 40 and abs(y - (room_y_pos + entrance[1])) <= 40:
+				print("connected")
+				return True
+		return False
+
+
+
+
 
 class Game:
 	def __init__(self, tk):
