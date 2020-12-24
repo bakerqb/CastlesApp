@@ -14,15 +14,12 @@ class Room:
 		self.rooms = rooms
 		self.points = self.room_info["points"]
 		self.dimensions = self.get_dimensions()
-		# print("dimensions: " + str(self.dimensions))
 
 		# Set current position of image
 		
 		if position == 0:
-			print("foyer coords")
 			self.x_pos = board.width_/2
 			self.y_pos = board.height_/2.5
-			print("(" + str(self.x_pos) + ", " + str(self.y_pos) + ")")
 
 		else:
 			self.x_pos = board.width_*position/8
@@ -83,7 +80,6 @@ class Room:
 				self.move_flag = True
 				self.board.canvas.tag_raise(self.room_img)
 
-			# print(self.board.canvas.coords(self.room_img))
 			self.x_pos = self.board.canvas.coords(self.room_img)[0]
 			self.y_pos = self.board.canvas.coords(self.room_img)[1]
 			self.false_x_pos = e.x
@@ -93,15 +89,29 @@ class Room:
 	def rotate_img(self, e):
 		if not self.lock:
 			del self.rooms[self.room_img]
+			# del self.all_rooms[self.filename[:-9]]
+			# self.all_rooms[self.filename[:-9]] = self.room_info
+			self.board.canvas.delete(self.room_img)
 			rotation = (int(self.filename.split('.')[0][-3:]) + 90) % 360
 			self.filename = self.filename.split('.')[0][:-3] + str(rotation).zfill(3) + ".png"
 			self.photoimg = PhotoImage(file=Path(__file__).resolve().parent.parent/"images"/"rooms"/self.filename)
 			self.photoimg = self.photoimg.subsample(3)
 			self.room_img = self.board.canvas.create_image(e.x, e.y, anchor=CENTER, image=self.photoimg)
-			self.rooms[self.room_img] = self
+			self.x_pos = self.board.canvas.coords(self.room_img)[0]
+			self.y_pos = self.board.canvas.coords(self.room_img)[1]
+			self.false_x_pos = self.x_pos
+			self.false_y_pos = self.y_pos
+			self.all_rooms[self.room_img] = self.room_info
 			print(self.filename + ": " + str(self.room_img))
 			# Rebind so object can be rotated again
 			self.bind()
+
+			self.entrances["lateral"], self.entrances["vertical"] = self.entrances["vertical"], self.entrances["lateral"]
+			for direction in self.entrances.keys():
+				for i in range(len(self.entrances[direction])):
+					self.entrances[direction][i] = (-self.entrances[direction][i][1], self.entrances[direction][i][0])
+
+			self.rooms[self.room_img] = self
 			self.board.last_selected_room = self
 
 	def get_entrance_locations(self):
@@ -178,8 +188,6 @@ class Room:
 
 	def get_vertical_entrances(self, top_or_bottom):
 		entrance_arr = []
-		if self.room_img == 4:
-			print(top_or_bottom + "_edge")
 		for entrance in self.room_info["entrances"][top_or_bottom + "_edge"]:
 			if entrance == "NA":
 				continue
@@ -189,8 +197,6 @@ class Room:
 			if top_or_bottom == "top":
 				y = -self.photoimg.height()/2
 			else:
-				if self.room_img == 4:
-					print("hereee")
 				y = self.photoimg.height()/2
 			
 			# Find length of ridge of room
@@ -250,12 +256,10 @@ class Board:
 		# Finalize move button
 		self.button_widget = Button(tk, text="Finalize Move")
 		self.button_widget.bind("<Button-1>", lambda e: self.update_score(e))
-		print("button: " + str(self.button_widget))
 		self.button_widget.pack()
 
 		self.score = 0
 		self.score_text = self.canvas.create_text(200, 60, fill="darkblue", font="Times 25 italic bold", text="Score: " + str(self.score))
-		print("score text: " + str(self.score_text))
 		self.last_selected_room = None
 
 
@@ -279,13 +283,9 @@ class Board:
 		x = self.last_selected_room.x_pos
 		y = self.last_selected_room.y_pos
 		
-		print(self.last_selected_room.entrances.keys())
 		for direction in self.last_selected_room.entrances.keys():
-			# print(self.last_selected_room.entrances)
 			for entrance in self.last_selected_room.entrances[direction]:
 				# Create radius for entrance of room just placed
-				if direction == "vertical":
-					print("vertical last_selected_room coords: " + str(entrance))
 				x1 = x + entrance[0] + 10
 				x2 = x + entrance[0] - 10
 				y1 = y + entrance[1] + 10
@@ -315,7 +315,6 @@ class Board:
 
 
 	def is_connected(self, x, y, room, direction):
-		print("direction: " + direction)
 		entrances = self.game.rooms[room].entrances[direction]
 		room_x_pos = self.game.rooms[room].x_pos
 		room_y_pos = self.game.rooms[room].y_pos
